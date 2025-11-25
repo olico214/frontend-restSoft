@@ -15,7 +15,7 @@ import {
     SelectItem
 } from "@nextui-org/react";
 
-export default function CreateOrder({ products, user_id }) {
+export default function CreateOrder({ products, user_id, backendURL }) {
     const router = useRouter();
 
     // Estado del "Carrito" (Lista de productos seleccionados)
@@ -57,7 +57,7 @@ export default function CreateOrder({ products, user_id }) {
                 productIds: cart.map((p) => p.id)
             };
 
-            const res = await fetch(`http://localhost:8000/orders/${user_id}`, {
+            const res = await fetch(`${backendURL}/orders/${user_id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

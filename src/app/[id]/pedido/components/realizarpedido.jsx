@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-export default function RealizarPedido({ products, user_id, phoneQuery, url }) {
+export default function RealizarPedido({ products, user_id, phoneQuery, url, backendURL }) {
     const [loading, setLoading] = useState(true);
     const [activeOrder, setActiveOrder] = useState(null);
 
@@ -26,7 +26,7 @@ export default function RealizarPedido({ products, user_id, phoneQuery, url }) {
             try {
                 // Pedimos TODOS los pedidos de este restaurante
                 // (Idealmente el backend debería tener un filtro por teléfono, pero filtramos aquí por ahora)
-                const res = await axios.get(`http://localhost:8000/orders/${user_id}`);
+                const res = await axios.get(`${backendURL}/orders/${user_id}`);
                 const orders = res.data;
 
                 // Buscamos si este teléfono tiene un pedido "vivo"
@@ -73,7 +73,7 @@ export default function RealizarPedido({ products, user_id, phoneQuery, url }) {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     // --- ENVIAR PEDIDO ---
-  const handlePlaceOrder = async () => {
+    const handlePlaceOrder = async () => {
         if (!phoneQuery) return alert("Error: No se detectó número de teléfono.");
 
         setSending(true);
@@ -89,25 +89,25 @@ export default function RealizarPedido({ products, user_id, phoneQuery, url }) {
             };
 
             // 2. Crear la orden en tu Base de Datos
-            const res = await axios.post(`http://localhost:8000/orders/${user_id}`, payload);
+            const res = await axios.post(`${backendURL}/orders/${user_id}`, payload);
 
 
             // --- NUEVA LÓGICA: PREPARAR EL MENSAJE CON PRODUCTOS ---
-            
+
             // A. Calcular el total monetario
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
             // B. Crear la lista de productos en texto (Ej: "2x Hamburguesa - $100")
-            const listaProductos = cart.map(item => 
+            const listaProductos = cart.map(item =>
                 `▪ ${item.quantity}x ${item.name} ($${(item.price * item.quantity).toFixed(2)})`
             ).join('\n'); // Un salto de línea entre cada producto
 
             // C. Armar el mensaje completo
             const mensajeFinal = `*¡Pedido Recibido!* 🍽️\n` +
-                                 `Orden N°: ${res.data.id}\n\n` +
-                                 `*Resumen del pedido:*\n` +
-                                 `${listaProductos}\n\n` +
-                                 `*Total a pagar: $${total.toFixed(2)}*`;
+                `Orden N°: ${res.data.id}\n\n` +
+                `*Resumen del pedido:*\n` +
+                `${listaProductos}\n\n` +
+                `*Total a pagar: $${total.toFixed(2)}*`;
 
             // -------------------------------------------------------
 
@@ -118,9 +118,9 @@ export default function RealizarPedido({ products, user_id, phoneQuery, url }) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ 
-                    url: url[0].url, 
-                    phone: phoneQuery, 
+                body: JSON.stringify({
+                    url: url[0].url,
+                    phone: phoneQuery,
                     content: mensajeFinal // <--- Aquí enviamos el texto formateado
                 })
             });

@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation"; // Para recargar la página al guardar
-import { Button ,  Modal,
+import {
+  Button, Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
@@ -10,9 +11,10 @@ import { Button ,  Modal,
   useDisclosure,
   Input,
   Select,
-  SelectItem,} from "@nextui-org/react";
+  SelectItem,
+} from "@nextui-org/react";
 
-export default function CrearEditarComponent({ item = null, user_id }) {
+export default function CrearEditarComponent({ item = null, user_id, backendURL }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
   // Estados del formulario
@@ -40,7 +42,7 @@ export default function CrearEditarComponent({ item = null, user_id }) {
 
   const handleSubmit = async (onClose) => {
     setLoading(true);
-    
+
     // Preparar el cuerpo de la petición
     const payload = {
       name: name,
@@ -51,23 +53,23 @@ export default function CrearEditarComponent({ item = null, user_id }) {
 
     try {
       if (isEditing) {
-const res = await fetch(`http://localhost:8000/products/${item.id}`,{
-    method: "PUT",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(payload),
-})
+        const res = await fetch(`${backendURL}/products/${item.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
         alert("Producto actualizado correctamente");
       } else {
         // --- CREAR (POST) ---
-        const res = await fetch(`http://localhost:8000/products`,{
-    method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(payload),
-})
+        const res = await fetch(`${backendURL}/products`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
         alert("Producto creado correctamente");
       }
 
@@ -85,8 +87,8 @@ const res = await fetch(`http://localhost:8000/products/${item.id}`,{
   return (
     <>
       {/* Botón Trigger: Cambia el texto/color dependiendo si es crear o editar */}
-      <Button 
-        onPress={onOpen} 
+      <Button
+        onPress={onOpen}
         color={isEditing ? "warning" : "primary"}
         variant={isEditing ? "flat" : "solid"}
       >
@@ -100,7 +102,7 @@ const res = await fetch(`http://localhost:8000/products/${item.id}`,{
               <ModalHeader className="flex flex-col gap-1">
                 {isEditing ? `Editar ${item.name}` : "Crear Nuevo Producto"}
               </ModalHeader>
-              
+
               <ModalBody>
                 {/* Input Nombre */}
                 <Input
@@ -148,8 +150,8 @@ const res = await fetch(`http://localhost:8000/products/${item.id}`,{
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Cancelar
                 </Button>
-                <Button 
-                  color="primary" 
+                <Button
+                  color="primary"
                   onPress={() => handleSubmit(onClose)}
                   isLoading={loading}
                 >

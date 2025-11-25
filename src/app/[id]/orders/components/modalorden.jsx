@@ -19,7 +19,7 @@ import {
 import axios from "axios";
 
 // Recibimos 'products' para poder agregar cosas nuevas
-export default function ModalProcesarOrden({ order, products, url, user_id }) {
+export default function ModalProcesarOrden({ order, products, url, user_id, backendURL }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
   const [comentary, setComentary] = useState(order.comentary || "");
@@ -104,14 +104,14 @@ export default function ModalProcesarOrden({ order, products, url, user_id }) {
         productIds: productIds // Enviamos la nueva lista de productos
       };
 
-      await axios.put(`http://localhost:8000/orders/${order.id}`, payload);
+      await axios.put(`${backendURL}/orders/${order.id}`, payload);
 
-     const mensajeFinal = `*Actualización de Pedido* 🔔\n\n` +
-                     `Estimado cliente, le informamos sobre su orden *#${order.id}*.\n` +
-                     `------------------------------\n` +
-                     `Nuevo Estatus: *${newStatus.toUpperCase()}*\n` +
-                     `------------------------------\n\n` +
-                     `¡Gracias por su preferencia!`;
+      const mensajeFinal = `*Actualización de Pedido* 🔔\n\n` +
+        `Estimado cliente, le informamos sobre su orden *#${order.id}*.\n` +
+        `------------------------------\n` +
+        `Nuevo Estatus: *${newStatus.toUpperCase()}*\n` +
+        `------------------------------\n\n` +
+        `¡Gracias por su preferencia!`;
 
       await fetch(`/api/webhook/${user_id}`, {
         method: "POST",

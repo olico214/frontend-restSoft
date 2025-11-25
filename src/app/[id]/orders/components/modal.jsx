@@ -1,14 +1,16 @@
 "use client"
-import { Modal,  ModalContent,
+import {
+  Modal, ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure, } from "@nextui-org/react";
+  useDisclosure,
+} from "@nextui-org/react";
 import CreateOrder from "./crearOrder";
 
-export default function ModalCrearOrden({products, user_id}) {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+export default function ModalCrearOrden({ products, user_id, backendURL }) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
@@ -19,9 +21,9 @@ export default function ModalCrearOrden({products, user_id}) {
             <>
               <ModalHeader className="flex flex-col gap-1">Nuevo Pedido</ModalHeader>
               <ModalBody>
-               <CreateOrder products={products} user_id={user_id} />
+                <CreateOrder products={products} user_id={user_id} backendURL={backendURL} />
               </ModalBody>
-             
+
             </>
           )}
         </ModalContent>

@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/react"; // O @heroui/react dependiendo de tu versión
 import CrearEditarComponent from "./crearEditar";
 
-export default function TableComponent({ user_id,data }) {
+export default function TableComponent({ user_id, data, backendURL }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,20 +20,20 @@ export default function TableComponent({ user_id,data }) {
   // Cargar datos al montar el componente
   useEffect(() => {
     setLoading(true);
-    if (data && data.length>0) {
+    if (data && data.length > 0) {
       setProducts(data);
     }
-     setLoading(false);
+    setLoading(false);
   }, [data]);
 
   return (
     <div className="flex flex-col gap-4">
       {/* Botón para crear uno nuevo (arriba de la tabla) */}
       <div className="flex justify-end">
-        <CrearEditarComponent user_id={user_id} />
+        <CrearEditarComponent user_id={user_id} backendURL={backendURL} />
       </div>
 
-      <Table 
+      <Table
         aria-label="Tabla de productos"
         emptyContent={loading ? "Cargando..." : "No hay productos registrados."}
       >
@@ -44,7 +44,7 @@ export default function TableComponent({ user_id,data }) {
           <TableColumn>ACCIONES</TableColumn>
         </TableHeader>
 
-        <TableBody 
+        <TableBody
           items={products}
           isLoading={loading}
           loadingContent={<Spinner label="Cargando..." />}
@@ -53,10 +53,10 @@ export default function TableComponent({ user_id,data }) {
             <TableRow key={item.id}>
               {/* Celda Nombre */}
               <TableCell>{item.name}</TableCell>
-              
+
               {/* Celda Precio */}
               <TableCell>${item.price.toFixed(2)}</TableCell>
-              
+
               {/* Celda Estatus - Puedes ponerle colorcitos si quieres */}
               <TableCell>
                 <span className={item.estatus === "activo" ? "text-green-600 font-bold" : "text-red-500"}>
@@ -67,7 +67,7 @@ export default function TableComponent({ user_id,data }) {
               {/* Celda Acciones (Botón Editar) */}
               <TableCell>
                 {/* Al pasarle "item", el componente sabe que es modo EDICIÓN */}
-                <CrearEditarComponent user_id={user_id} item={item} />
+                <CrearEditarComponent user_id={user_id} item={item} backendURL={backendURL} />
               </TableCell>
             </TableRow>
           )}
