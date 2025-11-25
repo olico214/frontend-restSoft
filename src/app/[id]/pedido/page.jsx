@@ -8,9 +8,14 @@ export default async function PedidoPage({ params, searchParams }) {
 
   // 2. Traemos los productos del restaurante desde el servidor
   let products = [];
+  let url
   try {
     const res = await fetch(`http://localhost:8000/products/${id}`, { cache: 'no-store' });
     products = await res.json();
+
+
+    const res1 = await fetch(`http://localhost:8000/instance_user/${id}`, { cache: 'no-store' });
+    url = await res1.json();
   } catch (error) {
     console.error("Error al cargar productos:", error);
   }
@@ -23,6 +28,7 @@ export default async function PedidoPage({ params, searchParams }) {
         products={products} 
         user_id={id} 
         phoneQuery={number} 
+        url={url}
       />
     </div>
   );

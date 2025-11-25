@@ -10,7 +10,7 @@ import axios from "axios";
 import ModalCrearOrden from "./modal";
 import ModalProcesarOrden from "./modalorden";
 
-export default function OrdersComponent({ user_id, products }) {
+export default function OrdersComponent({ user_id, products,url }) {
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState("todos");
   
@@ -203,7 +203,7 @@ export default function OrdersComponent({ user_id, products }) {
                 >
                   {order.estatus || "Nuevo"}
                 </Chip>
-                <ModalProcesarOrden order={order} products={products} />
+                <ModalProcesarOrden order={order} products={products} url={url} user_id={user_id}/>
                 
               </CardFooter>
             </Card>
