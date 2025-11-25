@@ -10,11 +10,11 @@ export default async function PedidoPage({ params, searchParams }) {
   let products = [];
   let url
   try {
-    const res = await fetch(`http://localhost:8000/products/${id}`, { cache: 'no-store' });
+    const res = await fetch(`http://localhost:8001/products/${id}`, { cache: 'no-store' });
     products = await res.json();
 
 
-    const res1 = await fetch(`http://localhost:8000/instance_user/${id}`, { cache: 'no-store' });
+    const res1 = await fetch(`http://localhost:8001/instance_user/${id}`, { cache: 'no-store' });
     url = await res1.json();
   } catch (error) {
     console.error("Error al cargar productos:", error);
@@ -24,10 +24,10 @@ export default async function PedidoPage({ params, searchParams }) {
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Pasamos los datos iniciales al cliente */}
-      <RealizarPedido 
-        products={products} 
-        user_id={id} 
-        phoneQuery={number} 
+      <RealizarPedido
+        products={products}
+        user_id={id}
+        phoneQuery={number}
         url={url}
       />
     </div>
